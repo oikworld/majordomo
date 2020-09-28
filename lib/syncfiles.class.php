@@ -295,11 +295,11 @@ function copyFiles($source, $destination, $over = 0, $patterns = 0)
                 continue;
             } elseif ($file == '.htpasswd' and  file_exists($destination . DIRECTORY_SEPARATOR . $file))  {
                 continue;
-            } elseif ($file == '.ini' and  file_exists($destination . DIRECTORY_SEPARATOR . $file))  {
+            } elseif (substr($file,-4) == '.ini' and  file_exists($destination . DIRECTORY_SEPARATOR . $file))  {
                 continue;
-            } elseif ($file == '.sql' and  file_exists($destination . DIRECTORY_SEPARATOR . $file) )  {
+            } elseif (substr($file,-4) == '.sql' and  file_exists($destination . DIRECTORY_SEPARATOR . $file) )  {
                 continue;
-            } elseif ($file == '.sh' and  file_exists($destination . DIRECTORY_SEPARATOR . $file) )  {
+            } elseif (substr($file,-3) == '.sh' and  file_exists($destination . DIRECTORY_SEPARATOR . $file) )  {
                 continue;
             } elseif (is_file($source . DIRECTORY_SEPARATOR . $file) && (!file_exists($destination . DIRECTORY_SEPARATOR . $file) || $over)) {
                 if (!is_array($patterns)) {
