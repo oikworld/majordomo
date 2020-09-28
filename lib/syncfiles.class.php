@@ -291,6 +291,16 @@ function copyFiles($source, $destination, $over = 0, $patterns = 0)
             if (is_dir($source . DIRECTORY_SEPARATOR . $file) && ($file != '.') && ($file != '..')) {
                 //$res=$this->copyTree($source."/".$file, $destination."/".$file, $over, $patterns);
                 continue;
+            } elseif ($file == '.htaccess' and  file_exists($destination . DIRECTORY_SEPARATOR . $file))  {
+                continue;
+            } elseif ($file == '.htpasswd' and  file_exists($destination . DIRECTORY_SEPARATOR . $file))  {
+                continue;
+            } elseif ($file == '.ini' and  file_exists($destination . DIRECTORY_SEPARATOR . $file))  {
+                continue;
+            } elseif ($file == '.sql' and  file_exists($destination . DIRECTORY_SEPARATOR . $file) )  {
+                continue;
+            } elseif ($file == '.sh' and  file_exists($destination . DIRECTORY_SEPARATOR . $file) )  {
+                continue;
             } elseif (is_file($source . DIRECTORY_SEPARATOR . $file) && (!file_exists($destination . DIRECTORY_SEPARATOR . $file) || $over)) {
                 if (!is_array($patterns)) {
                     $ok_to_copy = 1;
