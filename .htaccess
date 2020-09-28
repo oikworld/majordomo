@@ -42,7 +42,7 @@ allow from 172.16
 allow from 10
 </FILES>
 
-<FilesMatch ".(htaccess|htpasswd|ini|phps|fla|sql|log|sh)$">
+<FilesMatch ".(htaccess|htpasswd|ini|sql|sh)$">
 order deny,allow
 # Denies all IP's
 Deny from all
