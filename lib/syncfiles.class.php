@@ -31,6 +31,7 @@ function preparePathTime($s, $mtime)
  */
 function is_dir2($d)
 {
+    // debmes
 
     // none directory
     if (substr($d, -2) == DIRECTORY_SEPARATOR . "." || substr($d, -2) == "/.") {
@@ -783,7 +784,7 @@ function UTF_Encode($str, $type)
 */
 function copyTree($source, $destination, $over = 0, $patterns = 0)
 {
-	set_time_limit(0);
+
 
     //Remove last slash '/' in source and destination - slash was added when copy
     if (substr($d, -1) == "/" ) {
