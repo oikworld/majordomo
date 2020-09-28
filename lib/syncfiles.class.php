@@ -260,15 +260,19 @@ function copyFile($src, $dst)
 // function copy files from sourse directory to destination 
 function copyFiles($source, $destination, $over = 0, $patterns = 0)
 {
-set_time_limit(0);
     $res = 1;
 	
-    if (substr($d, -1) == "/" ) {
-        $d = substr($d,0,-1); 
+    //Remove last slash '/' in source and destination - slash was added when copy
+    if (substr($source, -1) == "/" ) {
+        $source = substr($source,0,-1); 
+    } else if (substr($source, -1) == DIRECTORY_SEPARATOR ) {
+        $source = substr($source,0,-1);
     }
-    
-    if (substr($d, -1) == DIRECTORY_SEPARATOR ) {
-        $d = substr($d,0,-1);
+	
+    if (substr($destination, -1) == "/" ) {
+        $destination = substr($destination,0,-1); 
+    } else if (substr($destination, -1) == DIRECTORY_SEPARATOR ) {
+        $destination = substr($destination,0,-1);
     }
 	
     if (!Is_Dir2($source)) {
@@ -287,7 +291,7 @@ set_time_limit(0);
 
             if (is_dir($source . DIRECTORY_SEPARATOR . $file) && ($file != '.') && ($file != '..')) {
                 //$res=$this->copyTree($source."/".$file, $destination."/".$file, $over, $patterns);
-		continue;
+                continue;
             } elseif (is_file($source . DIRECTORY_SEPARATOR . $file) && (!file_exists($destination . DIRECTORY_SEPARATOR . $file) || $over)) {
                 if (!is_array($patterns)) {
                     $ok_to_copy = 1;
