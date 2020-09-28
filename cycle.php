@@ -45,10 +45,12 @@ $old_mask = umask(0);
 if (is_dir(DOC_ROOT . DIRECTORY_SEPARATOR .'cached')) {
     DebMes("Removing cache from " . DOC_ROOT . DIRECTORY_SEPARATOR . 'cached');
     removeTree(DOC_ROOT . DIRECTORY_SEPARATOR . 'cached');
+	echo ("Removing cache from " . DOC_ROOT . DIRECTORY_SEPARATOR . 'cached' . "\n");
 }
 if (is_dir(DOC_ROOT . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR . 'cached')) {
     DebMes("Removing cache from " . DOC_ROOT . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR . 'cached');
     removeTree(DOC_ROOT . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR . 'cached');
+	echo ("Removing cache from " . DOC_ROOT . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR . 'cached' . "\n");
 }
 
 // moving some folders to ./cms/
@@ -58,11 +60,11 @@ $move_folders = array(
     'sounds',
     'texts');
 foreach ($move_folders as $folder) {
-    if (is_dir(ROOT . $folder)) {
-        echo "Moving " . ROOT . $folder . ' to ' . ROOT . 'cms/' . $folder . "\n";
-        DebMes('Moving ' . ROOT . $folder . ' to ' . ROOT . 'cms/' . $folder);
-        copyTree(ROOT . $folder, ROOT . 'cms/' . $folder);
-        removeTree(ROOT . $folder);
+    if (is_dir(DOC_ROOT . DIRECTORY_SEPARATOR . $folder)) {
+        echo "Moving " . DOC_ROOT . DIRECTORY_SEPARATOR . $folder . ' to ' . DOC_ROOT . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR . $folder . "\n";
+        DebMes('Moving ' . DOC_ROOT . DIRECTORY_SEPARATOR . $folder . ' to ' . DOC_ROOT . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR .  $folder);
+        copyTree(DOC_ROOT . DIRECTORY_SEPARATOR . $folder, DOC_ROOT . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR . $folder);
+        removeTree(DOC_ROOT . DIRECTORY_SEPARATOR . $folder);
     }
 }
 
