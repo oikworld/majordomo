@@ -784,15 +784,17 @@ function UTF_Encode($str, $type)
 */
 function copyTree($source, $destination, $over = 0, $patterns = 0)
 {
-
-
     //Remove last slash '/' in source and destination - slash was added when copy
-    if (substr($d, -1) == "/" ) {
-        $d = substr($d,0,-1); 
+    if (substr($source, -1) == "/" ) {
+        $source = substr($source,0,-1); 
+    } else if (substr($source, -1) == DIRECTORY_SEPARATOR ) {
+        $source = substr($source,0,-1);
     }
-    
-    if (substr($d, -1) == DIRECTORY_SEPARATOR ) {
-        $d = substr($d,0,-1);
+	
+    if (substr($destination, -1) == "/" ) {
+        $destination = substr($destination,0,-1); 
+    } else if (substr($destination, -1) == DIRECTORY_SEPARATOR ) {
+        $destination = substr($destination,0,-1);
     }
     
     if (!Is_Dir2($source)) {
@@ -810,7 +812,8 @@ function copyTree($source, $destination, $over = 0, $patterns = 0)
     if ($dir = @opendir($source)) {
         while (($file = readdir($dir)) !== false) {
             if (Is_Dir2($source . DIRECTORY_SEPARATOR . $file)) {
-                $res = copyTree($source . DIRECTORY_SEPARATOR . $file, $destination . DIRECTORY_SEPARATOR . $file, $over, $patterns);
+                DebMes($source . DIRECTORY_SEPARATOR . $file);
+                copyTree($source . DIRECTORY_SEPARATOR . $file, $destination . DIRECTORY_SEPARATOR . $file, $over, $patterns);
             }
         }
         copyFiles($source, $destination, $over, $patterns);
