@@ -366,6 +366,7 @@ function moveFiles($source, $destination, $over = 0, $patterns = 0)
             }
         }
         closedir($dir);
+        @unlink($source);
     }
     return $res;
 }
