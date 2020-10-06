@@ -881,6 +881,50 @@ function copyTree($source, $destination, $over = 0, $patterns = 0)
     return true;
 }
 
+/**
+* moveTree
+* Move source directory tree to destination directory
+* @access public
+*/
+function moveTree($source, $destination, $over = 0, $patterns = 0)
+{
+    //Remove last slash '/' in source and destination - slash was added when copy
+    if (substr($source, -1) == "/" ) {
+        $source = substr($source,0,-1); 
+    } else if (substr($source, -1) == DIRECTORY_SEPARATOR ) {
+        $source = substr($source,0,-1);
+    }
+	
+    if (substr($destination, -1) == "/" ) {
+        $destination = substr($destination,0,-1); 
+    } else if (substr($destination, -1) == DIRECTORY_SEPARATOR ) {
+        $destination = substr($destination,0,-1);
+    }
+    
+    if (!Is_Dir2($source)) {
+        // cannot create destination path
+        return false; 
+    }
+
+    if (!Is_Dir2($destination)) {
+        if (!mkdir($destination, 0777, true)) {
+            // cannot create destination path
+            return false; 
+        }
+    }
+
+    if ($dir = @opendir($source)) {
+        while (($file = readdir($dir)) !== false) {
+            if (Is_Dir2($source . DIRECTORY_SEPARATOR . $file)) {
+                moveTree($source . DIRECTORY_SEPARATOR . $file, $destination . DIRECTORY_SEPARATOR . $file, $over, $patterns);
+            }
+        }
+        moveFiles($source, $destination, $over, $patterns);
+        closedir($dir);
+    }
+    return true;
+}
+
 function removeEmptySubFolders($path)
 {
   $empty=true;
