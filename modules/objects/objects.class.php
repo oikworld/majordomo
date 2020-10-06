@@ -1039,7 +1039,8 @@ class objects extends module
                 $params['OLD_VALUE'] = (string)$old_value;
                 $params['SOURCE'] = (string)$source;
                 //$this->callMethod($prop['ONCHANGE'], $params);
-                $this->callMethodSafe($prop['ONCHANGE'], $params);
+                //$this->callMethodSafe($prop['ONCHANGE'], $params);
+                $this->raiseEvent($prop['ONCHANGE'], $params);
                 unset($property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']]);
             }
         }
