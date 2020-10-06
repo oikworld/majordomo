@@ -494,27 +494,34 @@ class objects extends module
         if (is_array($params)) {
             if (isset($params['m_c_s']) && is_array($params['m_c_s']) && !empty($params['m_c_s'])) {
                 $call_stack = $params['m_c_s'];
+                unset($params['m_c_s']);
             }
             if (isset($params['r_s_m']) && !empty($params['r_s_m'])) {
                 $run_SafeMethod = $params['r_s_m'];
+                unset($params['r_s_m']);
             }
-            $raiseEvent = $params['raiseEvent'];
-            unset($params['raiseEvent']);
-            unset($params['r_s_m']);
-            unset($params['m_c_s']);
+            if (isset($params['raiseEvent']) && !empty($params['raiseEvent'])) {
+                $raiseEvent = $params['raiseEvent'];
+                unset($params['raiseEvent']);
+            }
             $current_call .= '.' . md5(json_encode($params));
         }
         if (IsSet($_SERVER['REQUEST_URI']) && ($_SERVER['REQUEST_URI'] != '')) {
             if (isset($_GET['m_c_s']) && is_array($_GET['m_c_s']) && !empty($_GET['m_c_s'])) {
                 $call_stack = $_GET['m_c_s'];
             }
-            $raiseEvent = $_GET['raiseEvent'];
-            $run_SafeMethod = $_GET['r_s_m'];
-            if (is_array($call_stack) && in_array($current_call, $call_stack)) {
-                $call_stack[] = $current_call;
-                DebMes("Warning: cross-linked call of " . $current_call . "\nlog:\n" . implode(" -> \n", $call_stack));
-                return 0;
+            if (isset($_GET['raiseEvent']) && !empty($_GET['raiseEvent'])) {
+                $raiseEvent = $_GET['raiseEvent'];
             }
+            if (isset($_GET['r_s_m']) && !empty($_GET['r_s_m'])) {
+                $run_SafeMethod = $_GET['r_s_m'];
+            }
+        }
+
+        if (is_array($call_stack) && in_array($current_call, $call_stack)) {
+            $call_stack[] = $current_call;
+            DebMes("Warning: cross-linked call of " . $current_call . "\nlog:\n" . implode(" -> \n", $call_stack));
+            return 0;
         }
 
         if (!is_array($params)) {
