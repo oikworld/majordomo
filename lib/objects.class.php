@@ -915,7 +915,10 @@ function setGlobal($varname, $value, $no_linked = 0, $source = '')
 
     $tmp = explode('.', $varname);
 
-    if (isset($tmp[1])) {
+    if (isset($tmp[2])) {
+        $object_name = $tmp[0] . '.' . $tmp[1];
+        $varname = $tmp[2];
+    } elseif (isset($tmp[1])) {
         $object_name = $tmp[0];
         $varname = $tmp[1];
     } else {
