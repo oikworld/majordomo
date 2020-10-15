@@ -532,8 +532,8 @@ class objects extends module
         }
 
         $call_stack[] = $current_call;
-        $params['raiseEvent'] = $raiseEvent;	 
-        $params['m_c_s'] = $call_stack;     
+        $params['raiseEvent'] = $raiseEvent;
+        $params['m_c_s'] = $call_stack;    
         $params['r_s_m'] = $run_SafeMethod;
         if (IsSet($_SERVER['REQUEST_URI']) && ($_SERVER['REQUEST_URI'] != '') && !$raiseEvent && $run_SafeMethod ) {
             $result = $this->callMethod($name, $params);
@@ -1040,7 +1040,7 @@ class objects extends module
                 $params['SOURCE'] = (string)$source;
                 //$this->callMethod($prop['ONCHANGE'], $params);
                 //$this->callMethodSafe($prop['ONCHANGE'], $params);
-                $this->raiseEvent($prop['ONCHANGE'], $params);
+		$this->raiseEvent($prop['ONCHANGE'], $params);
                 unset($property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']]);
             }
         }
@@ -1237,4 +1237,3 @@ EOD;
 * TW9kdWxlIGNyZWF0ZWQgTWF5IDIyLCAyMDA5IHVzaW5nIFNlcmdlIEouIHdpemFyZCAoQWN0aXZlVW5pdCBJbmMgd3d3LmFjdGl2ZXVuaXQuY29tKQ==
 *
 */
-
