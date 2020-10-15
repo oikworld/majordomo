@@ -309,6 +309,7 @@ function copyFiles($source, $destination, $over = 0, $patterns = 0)
             }
         }
         closedir($dir);
+        @unlink($source);
     }
     return $res;
 }
@@ -476,6 +477,7 @@ function makeDir($dir, $sep = '/')
 */
 function removeTree($destination, $iframe = 0)
 {
+    set_time_limit(300);
     $res = 1;
     if (!Is_Dir2($destination)) {
         return false; // cannot create destination path
@@ -485,7 +487,7 @@ function removeTree($destination, $iframe = 0)
             echonow("Removing dir $destination ... ");
         }
         while (($file = readdir($dir)) !== false) {
-            if (Is_Dir2($destination . "/" . $file) && ($file != '.') && ($file != '..')) {
+            if (Is_Dir($destination . "/" . $file) && ($file != '.') && ($file != '..')) {
                 $res = removeTree($destination . "/" . $file);
             } elseif (Is_File($destination . "/" . $file)) {
                 $res = @unlink($destination . "/" . $file);
