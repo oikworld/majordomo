@@ -35,19 +35,17 @@ order deny,allow
 # Denies all IP's
 Deny from all
 
-# This will allow the IP 192.168.0.0 - 192.168.255.255 
 allow from 192.168
 allow from 100.64
 allow from 172.16
 allow from 10
 </FILES>
 
-<FilesMatch ".(htaccess|htpasswd|ini|sql|sh)$">
+<FilesMatch ".(htaccess|htpasswd|ini|sql|sh|py)$">
 order deny,allow
 # Denies all IP's
 Deny from all
 
-# This will allow the IP 192.168.0.0 - 192.168.255.255 
 allow from 192.168
 allow from 100.64
 allow from 172.16
