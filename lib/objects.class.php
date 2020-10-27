@@ -389,9 +389,10 @@ function removeLinkedProperty($object, $property, $module)
  */
 function getObject($name)
 {
-    if (preg_match('/^(.+?)\.(.+?)$/', $name, $m)) {
-        $class_name = $m[1];
-        $object_name = $m[2];
+    if (strpos($name, '.') !== false) {
+        $m = explode('.', $name);
+        $class_name = $m[0];
+        $object_name = $m[1];
 
         $sqlQuery = "SELECT objects.*
                      FROM objects
@@ -400,10 +401,8 @@ function getObject($name)
                       AND classes.TITLE = '" . DBSafe($class_name) . "'";
         $rec = SQLSelectOne($sqlQuery);
     } else {
-        $sqlQuery = "SELECT objects.*
-                     FROM objects
-                    WHERE TITLE = '" . DBSafe($name) . "'";
-        $rec = SQLSelectOne($sqlQuery);
+        //$sqlQuery = "SELECT objects.* FROM objects WHERE TITLE = '" . DBSafe($name) . "'";
+        $rec = SQLSelectOne("SELECT objects.* FROM objects WHERE TITLE = '" . DBSafe($name) . "'");
         //$rec = SQLSelectOne("SELECT objects.* FROM objects WHERE TITLE = '".DBSafe($name)."'");
     }
 
@@ -600,11 +599,10 @@ function getGlobal($varname)
     } else {
         $object_name = 'ThisComputer';
     }
-    $cached_name = 'MJD:' . $object_name . '.' . $varname;
-    $cached_value = checkFromCache($cached_name);
+    $cached_value = checkFromCache('MJD:' . $object_name . '.' . $varname);
 
     if ($cached_value !== false) {
-        return $cached_value;
+       return $cached_value;
     }
 
     $obj = getObject($object_name);
@@ -614,7 +612,7 @@ function getGlobal($varname)
         saveToCache($cached_name, $value);
         return $value;
     } else {
-        return 0;
+        return false;
     }
 }
 
