@@ -1,5 +1,16 @@
 <?php
 
+function checkPhpVersion($v) {
+    $version = explode('.', PHP_VERSION);
+    $rv = ($version[0] * 10000 + $version[1] * 100 + $version[2]);
+    $temp = explode('.', $v);
+    $av = ($temp[0] * 10000 + $temp[1] * 100 + $temp[2]);
+    if($rv >= $av) {
+        return true;
+    }
+    return false;
+}
+
 function isRebootRequired() {
     $path_to_flag = ROOT . 'reboot';
     return file_exists($path_to_flag);
