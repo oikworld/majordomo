@@ -23,6 +23,64 @@ $cycleVarName='ThisComputer.'.str_replace('.php', '', basename(__FILE__)).'Run';
 
 clearTimeout('restartWebSocket');
 
+// run new wercion    
+if (checkphpversion("7.2.2")) {
+   while (1) {
+         $queue=SQLSelect("SELECT * FROM cached_ws");
+         if ($queue[0]['PROPERTY']) {
+            $total=count($queue);
+            $properties=array();
+            $values=array();
+            for($i=0;$i<$total;$i++) {
+               //$queue[$i]['PROPERTY']=mb_strtolower($queue[$i]['PROPERTY'],'UTF-8');
+               if ($queue[$i]['POST_ACTION']=='PostProperty') {
+                  $properties[]=$queue[$i]['PROPERTY'];
+                  $values[]=$queue[$i]['DATAVALUE'];
+               } else {
+                  $dataValue=$queue[$i]['DATAVALUE'];
+                  if (is_array(json_decode($dataValue, true))) {
+                     $dataValue=json_decode($dataValue, true);
+                  }
+                  if (postToWebSocket($queue[$i]['PROPERTY'], $dataValue, $queue[$i]['POST_ACTION'])=== false) {
+               if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
+                  DebMes("Failed to send data to websocket");
+               }
+               sg("cycle_websocketsRun","");
+               sg("cycle_websocketsControl","restart");
+               sleep(20);
+               sg("cycle_cycle_wscacheRun","");
+               sg("cycle_cycle_wscacheControl","restart");
+               }
+               }
+            }
+
+            if (count($properties)>0) {
+               if (postToWebSocket($properties, $values, 'PostProperty') === false) {
+               if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
+                  DebMes("Failed to send data to websocket");
+               }
+               sg("cycle_websocketsRun","");
+               sg("cycle_websocketsControl","restart");
+               sleep(20);
+               sg("cycle_wscacheRun","");
+               sg("cycle_wscacheControl","restart");
+               }
+            }
+
+      }
+      SQLTruncateTable('cached_ws');
+      if (time() - $checked_time > 10) {
+          $checked_time = time();
+          setGlobal((str_replace('.php', '', basename(__FILE__))).'Run', $checked_time, 1);
+      }
+      if (isRebootRequired() || IsSet($_GET['onetime'])) {
+         exit;
+      }
+      sleep(1);
+   }
+} 
+
+// run old version
 while (1)
 {
    if (time() - $checked_time > 0)
