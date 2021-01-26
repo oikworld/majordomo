@@ -91,21 +91,38 @@ function postToWebSocket($property, $value, $post_action = 'PostProperty')
         return false;
     }
 
-    require_once ROOT . 'lib/websockets/client/lib/class.websocket_client.php';
+    if (checkphpversion("7.2.2")) {
+        require_once ROOT . 'lib/WS/Client.php';
+    } else {
+	require_once ROOT . 'lib/websockets/client/lib/class.websocket_client.php';
+    }
 
     global $wsClient;
 
-    if (!Is_Object($wsClient)) {
-        $wsClient = new WebsocketClient;
-        if (!(@$wsClient->connect('127.0.0.1', WEBSOCKETS_PORT, '/majordomo'))) {
-            $wsClient = false;
-            if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
-                DebMes("Failed to connect to websocket");
-                echo date('Y-m-d H:i:s') . " Failed to connect to websocket\n";
+    if (checkphpversion("7.2.2")) {
+        if (!Is_Object($wsClient)) {
+            $wsClient = new \Bloatless\WebSocket\Client;
+            if (!(@$wsClient->connect('127.0.0.1', WEBSOCKETS_PORT, '/majordomo'))) {
+                $wsClient = false;
+                if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
+                    DebMes("Failed to connect to websocket");
+                    echo date('Y-m-d H:i:s') . " Failed to connect to websocket\n";
+                }
+            }
+        }
+    } else {
+	if (!Is_Object($wsClient)) {
+            $wsClient = new WebsocketClient;
+            if (!(@$wsClient->connect('127.0.0.1', WEBSOCKETS_PORT, '/majordomo'))) {
+                $wsClient = false;
+                if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
+                   DebMes("Failed to connect to websocket");
+                    echo date('Y-m-d H:i:s') . " Failed to connect to websocket\n";
+                }
             }
         }
     }
-
+	
     if (!Is_Object($wsClient) && IsSet($_SERVER['REQUEST_METHOD'])) {
         return false;
     }
@@ -137,6 +154,33 @@ function postToWebSocket($property, $value, $post_action = 'PostProperty')
         }
     }
 
+    if (checkphpversion("7.2.2")) {
+	    if (!$data_sent && !IsSet($_SERVER['REQUEST_METHOD'])) {
+		//reconnect
+		$wsClient = new \Bloatless\WebSocket\Client;
+		if ((@$wsClient->connect('127.0.0.1', WEBSOCKETS_PORT, '/majordomo'))) {
+		    $data_sent = @$wsClient->sendData($payload);
+		} else {
+		    if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
+			DebMes("Failed to reconnect to websocket");
+			echo date('Y-m-d H:i:s') . " Failed to reconnect to websocket\n";
+		    }
+		}
+	    }
+    } else {
+	    if (!$data_sent && !IsSet($_SERVER['REQUEST_METHOD'])) {
+		//reconnect
+		$wsClient = new WebsocketClient;
+		if ((@$wsClient->connect('127.0.0.1', WEBSOCKETS_PORT, '/majordomo'))) {
+		    $data_sent = @$wsClient->sendData($payload);
+		} else {
+		    if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
+			DebMes("Failed to reconnect to websocket");
+			echo date('Y-m-d H:i:s') . " Failed to reconnect to websocket\n";
+		    }
+		}
+	    }
+    }
     if (!$data_sent && !IsSet($_SERVER['REQUEST_METHOD'])) {
         //reconnect
         $wsClient = new WebsocketClient;
